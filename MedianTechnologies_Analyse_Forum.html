@@ -1,0 +1,825 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ALMDT · Median Technologies — Analyse Forum · 16/03/2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Exo+2:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg:#04060f; --surface:#080c18; --surface2:#0d1220; --border:#1a2240; --border2:#1e2a50;
+    --text:#c8d4f0; --text-dim:#8892c0; --text-muted:#5a6490;
+    --green:#34d399; --blue:#38bdf8; --yellow:#fbbf24; --red:#f87171;
+    --violet:#c084fc; --teal:#2dd4bf; --orange:#fb923c;
+    --green-bg:rgba(52,211,153,0.08); --blue-bg:rgba(56,189,248,0.08);
+    --yellow-bg:rgba(251,191,36,0.08); --red-bg:rgba(248,113,113,0.08); --violet-bg:rgba(192,132,252,0.08);
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:'Exo 2',sans-serif;font-size:15px;line-height:1.65;}
+  body::before{content:'';position:fixed;inset:0;background-image:linear-gradient(rgba(56,189,248,0.02) 1px,transparent 1px),linear-gradient(90deg,rgba(56,189,248,0.02) 1px,transparent 1px);background-size:60px 60px;pointer-events:none;z-index:0;}
+  .container{max-width:1100px;margin:0 auto;padding:0 24px;position:relative;z-index:1;}
+  .hero{padding:56px 0 40px;border-bottom:1px solid var(--border);}
+  .hero-badges{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:20px;}
+  .badge{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;padding:4px 10px;border-radius:4px;letter-spacing:0.06em;text-transform:uppercase;}
+  .badge-ticker{background:rgba(56,189,248,0.15);color:var(--blue);border:1px solid rgba(56,189,248,0.3);}
+  .badge-place{background:var(--surface2);color:var(--text-dim);border:1px solid var(--border);}
+  .badge-pea{background:rgba(52,211,153,0.12);color:var(--green);border:1px solid rgba(52,211,153,0.3);}
+  .badge-fda{background:rgba(52,211,153,0.2);color:var(--green);border:1px solid rgba(52,211,153,0.5);font-size:12px;}
+  .badge-warn{background:rgba(248,113,113,0.12);color:var(--red);border:1px solid rgba(248,113,113,0.3);}
+  .hero-title{font-size:38px;font-weight:800;letter-spacing:-0.02em;color:#e8eeff;line-height:1.1;margin-bottom:10px;}
+  .hero-sub{font-size:13px;font-family:'JetBrains Mono',monospace;color:var(--text-dim);letter-spacing:0.08em;text-transform:uppercase;margin-bottom:8px;}
+  .hero-tagline{font-size:17px;color:var(--blue);font-weight:500;margin-bottom:28px;}
+  .hero-meta{display:flex;flex-wrap:wrap;gap:28px;align-items:center;padding:16px 20px;background:var(--surface);border:1px solid var(--border);border-radius:8px;margin-bottom:16px;}
+  .meta-item{display:flex;flex-direction:column;gap:2px;}
+  .meta-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;font-family:'JetBrains Mono',monospace;}
+  .meta-value{font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:600;color:var(--text);}
+  .meta-value.cours{color:var(--yellow);font-size:18px;}
+  .disclaimer{font-size:12px;color:var(--text-muted);padding:10px 16px;background:var(--surface);border-left:3px solid var(--border2);border-radius:0 4px 4px 0;font-style:italic;}
+  section{padding:40px 0;border-bottom:1px solid var(--border);}
+  .section-header{display:flex;align-items:center;gap:12px;margin-bottom:28px;}
+  .section-icon{width:36px;height:36px;display:flex;align-items:center;justify-content:center;border-radius:8px;font-size:16px;flex-shrink:0;}
+  .section-title{font-size:20px;font-weight:700;color:#dde8ff;}
+  .section-sub{font-size:12px;color:var(--text-dim);margin-top:2px;font-family:'JetBrains Mono',monospace;}
+  .alerts{display:flex;flex-direction:column;gap:12px;}
+  .alert{padding:16px 20px;border-radius:8px;border-left:4px solid;display:flex;gap:14px;align-items:flex-start;}
+  .alert-green{background:var(--green-bg);border-color:var(--green);}
+  .alert-blue{background:var(--blue-bg);border-color:var(--blue);}
+  .alert-yellow{background:var(--yellow-bg);border-color:var(--yellow);}
+  .alert-red{background:var(--red-bg);border-color:var(--red);}
+  .alert-violet{background:var(--violet-bg);border-color:var(--violet);}
+  .alert-icon{font-size:20px;flex-shrink:0;margin-top:1px;}
+  .alert-title{font-weight:700;font-size:14px;margin-bottom:4px;}
+  .alert-green .alert-title{color:var(--green);}
+  .alert-blue .alert-title{color:var(--blue);}
+  .alert-yellow .alert-title{color:var(--yellow);}
+  .alert-red .alert-title{color:var(--red);}
+  .alert-violet .alert-title{color:var(--violet);}
+  .alert-text{font-size:13.5px;color:var(--text-dim);line-height:1.55;}
+  .kpi-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px;}
+  .kpi-card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:18px 20px;}
+  .kpi-label{font-size:11px;color:var(--text-dim);text-transform:uppercase;letter-spacing:0.07em;font-family:'JetBrains Mono',monospace;margin-bottom:8px;}
+  .kpi-value{font-family:'JetBrains Mono',monospace;font-size:22px;font-weight:700;color:#e0e8ff;margin-bottom:4px;}
+  .kpi-delta{font-size:12px;font-family:'JetBrains Mono',monospace;}
+  .kpi-delta.up{color:var(--green);} .kpi-delta.down{color:var(--red);} .kpi-delta.warn{color:var(--yellow);} .kpi-delta.info{color:var(--blue);}
+  .kpi-sub{font-size:12px;color:var(--text-muted);margin-top:4px;}
+  .table-wrap{overflow-x:auto;}
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{background:var(--surface2);color:var(--text-dim);font-weight:600;padding:10px 14px;text-align:left;font-size:11px;text-transform:uppercase;letter-spacing:0.07em;font-family:'JetBrains Mono',monospace;border-bottom:1px solid var(--border);}
+  td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text-dim);vertical-align:top;}
+  tr:last-child td{border-bottom:none;}
+  tr:hover td{background:rgba(255,255,255,0.015);}
+  .td-name{color:var(--text);font-weight:600;}
+  .td-green{color:var(--green);font-family:'JetBrains Mono',monospace;font-weight:600;}
+  .td-red{color:var(--red);font-family:'JetBrains Mono',monospace;font-weight:600;}
+  .td-yellow{color:var(--yellow);font-family:'JetBrains Mono',monospace;}
+  .td-blue{color:var(--blue);font-family:'JetBrains Mono',monospace;}
+  .td-violet{color:var(--violet);font-family:'JetBrains Mono',monospace;}
+  .td-teal{color:var(--teal);font-family:'JetBrains Mono',monospace;}
+  .td-mono{font-family:'JetBrains Mono',monospace;}
+  .tag{display:inline-block;font-size:10px;font-family:'JetBrains Mono',monospace;padding:2px 8px;border-radius:3px;font-weight:600;text-transform:uppercase;letter-spacing:0.05em;white-space:nowrap;}
+  .tag-green{background:rgba(52,211,153,0.15);color:var(--green);}
+  .tag-yellow{background:rgba(251,191,36,0.15);color:var(--yellow);}
+  .tag-red{background:rgba(248,113,113,0.15);color:var(--red);}
+  .tag-blue{background:rgba(56,189,248,0.15);color:var(--blue);}
+  .tag-violet{background:rgba(192,132,252,0.15);color:var(--violet);}
+  .tag-teal{background:rgba(45,212,191,0.15);color:var(--teal);}
+  .tag-orange{background:rgba(251,146,60,0.15);color:var(--orange);}
+  .timeline{position:relative;padding-left:24px;}
+  .timeline::before{content:'';position:absolute;left:7px;top:0;bottom:0;width:2px;background:var(--border);}
+  .tl-item{position:relative;padding:0 0 24px 24px;}
+  .tl-item:last-child{padding-bottom:0;}
+  .tl-dot{position:absolute;left:-10px;top:6px;width:10px;height:10px;border-radius:50%;border:2px solid;}
+  .tl-dot-green{border-color:var(--green);background:rgba(52,211,153,0.3);}
+  .tl-dot-blue{border-color:var(--blue);background:rgba(56,189,248,0.3);}
+  .tl-dot-yellow{border-color:var(--yellow);background:rgba(251,191,36,0.3);}
+  .tl-dot-red{border-color:var(--red);background:rgba(248,113,113,0.3);}
+  .tl-dot-violet{border-color:var(--violet);background:rgba(192,132,252,0.3);}
+  .tl-dot-orange{border-color:var(--orange);background:rgba(251,146,60,0.3);}
+  .tl-date{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--text-muted);margin-bottom:4px;}
+  .tl-title{font-weight:600;font-size:14px;color:var(--text);margin-bottom:4px;}
+  .tl-text{font-size:13px;color:var(--text-dim);line-height:1.55;}
+  .fib-header{display:grid;grid-template-columns:1fr 1fr 1fr;gap:12px;margin-bottom:24px;}
+  .fib-stat{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px 16px;}
+  .fib-stat-label{font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;font-family:'JetBrains Mono',monospace;}
+  .fib-stat-value{font-family:'JetBrains Mono',monospace;font-size:18px;font-weight:700;margin-top:4px;}
+  .fib-row{display:grid;grid-template-columns:90px 1fr 130px;align-items:center;gap:14px;margin-bottom:8px;}
+  .fib-label{font-family:'JetBrains Mono',monospace;font-size:12px;text-align:right;}
+  .fib-bar-bg{height:8px;background:var(--surface2);border-radius:4px;position:relative;overflow:visible;}
+  .fib-bar-fill{height:100%;border-radius:4px;}
+  .fib-price{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;}
+  .fib-cursor{position:absolute;top:-3px;bottom:-3px;width:3px;background:var(--yellow);border-radius:2px;box-shadow:0 0 8px var(--yellow);}
+  .fib-note{background:var(--blue-bg);border:1px solid rgba(56,189,248,0.2);border-radius:8px;padding:14px 18px;font-size:13px;color:var(--text-dim);margin-top:16px;}
+  .fib-note strong{color:var(--blue);}
+  .perspectives-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .persp-card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px;}
+  .persp-header{display:flex;align-items:center;gap:10px;margin-bottom:16px;padding-bottom:12px;border-bottom:1px solid var(--border);}
+  .persp-label{font-size:13px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;font-family:'JetBrains Mono',monospace;}
+  .persp-horizon{font-size:12px;font-family:'JetBrains Mono',monospace;}
+  .persp-horizon.ct{color:var(--teal);} .persp-horizon.mt{color:var(--blue);} .persp-horizon.lt{color:var(--violet);}
+  .persp-list{list-style:none;}
+  .persp-list li{font-size:13px;color:var(--text-dim);padding:7px 0;padding-left:18px;border-bottom:1px solid var(--border);position:relative;line-height:1.45;}
+  .persp-list li:last-child{border-bottom:none;}
+  .persp-list li::before{content:'›';position:absolute;left:4px;font-weight:700;}
+  .persp-list li.pos::before{color:var(--green);}
+  .persp-list li.neg::before{color:var(--red);}
+  .persp-list li.warn::before{color:var(--yellow);}
+  .verdict-box{border-radius:10px;padding:24px;border:1px solid;margin-bottom:16px;}
+  .verdict-box.bullish{background:rgba(52,211,153,0.07);border-color:rgba(52,211,153,0.25);}
+  .verdict-box.neutral{background:rgba(251,191,36,0.07);border-color:rgba(251,191,36,0.25);}
+  .verdict-box.bearish{background:rgba(248,113,113,0.07);border-color:rgba(248,113,113,0.25);}
+  .verdict-title{font-size:16px;font-weight:700;margin-bottom:12px;}
+  .verdict-box.bullish .verdict-title{color:var(--green);}
+  .verdict-box.neutral .verdict-title{color:var(--yellow);}
+  .verdict-box.bearish .verdict-title{color:var(--red);}
+  .verdict-text{font-size:14px;color:var(--text-dim);line-height:1.65;}
+  .key-levels{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}
+  .level-tag{display:flex;flex-direction:column;gap:2px;background:var(--surface2);border:1px solid var(--border);border-radius:6px;padding:10px 14px;min-width:120px;}
+  .level-tag-label{font-size:10px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.07em;font-family:'JetBrains Mono',monospace;}
+  .level-tag-value{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;}
+  .level-tag.support .level-tag-value{color:var(--green);}
+  .level-tag.resist .level-tag-value{color:var(--orange);}
+  .level-tag.target .level-tag-value{color:var(--blue);}
+  .level-tag.stop .level-tag-value{color:var(--red);}
+  .level-tag.current .level-tag-value{color:var(--yellow);}
+  .source{font-size:11px;font-family:'JetBrains Mono',monospace;color:var(--text-muted);background:var(--surface2);padding:2px 6px;border-radius:3px;display:inline-block;margin-left:4px;}
+  .warn-box{background:var(--yellow-bg);border:1px solid rgba(251,191,36,0.2);border-left:4px solid var(--yellow);border-radius:0 8px 8px 0;padding:12px 16px;font-size:12.5px;color:#b09a50;margin:12px 0;}
+  .warn-box strong{color:var(--yellow);}
+  .info-box{background:var(--blue-bg);border:1px solid rgba(56,189,248,0.2);border-left:4px solid var(--blue);border-radius:0 8px 8px 0;padding:12px 16px;font-size:12.5px;color:var(--text-dim);margin:12px 0;}
+  .company-grid{display:grid;grid-template-columns:2fr 1fr;gap:24px;}
+  .company-desc{font-size:14px;color:var(--text-dim);line-height:1.7;}
+  .company-desc p{margin-bottom:14px;}
+  .fact-item{padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;}
+  .fact-item:last-child{border-bottom:none;}
+  .fact-label{font-size:12px;color:var(--text-muted);}
+  .fact-value{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:600;color:var(--text);text-align:right;}
+  .rec-buy{color:#22c55e;font-weight:700;font-size:12px;}
+  footer{padding:32px 0 40px;text-align:center;color:var(--text-muted);font-size:12px;line-height:1.8;}
+  footer strong{color:var(--text-dim);}
+  @media(max-width:768px){.hero-title{font-size:28px;}.fib-header{grid-template-columns:1fr 1fr;}.perspectives-grid{grid-template-columns:1fr;}.company-grid{grid-template-columns:1fr;}.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+  b{color:var(--text);}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="container">
+<div class="hero">
+  <div class="hero-badges">
+    <span class="badge badge-ticker">ALMDT</span>
+    <span class="badge badge-place">Euronext Growth Paris</span>
+    <span class="badge badge-pea">✓ PEA-PME Éligible</span>
+    <span class="badge badge-fda">🎯 FDA 510(k) OBTENU · 09/02/2026</span>
+    <span class="badge badge-warn">⚠ RSI 57 · Résist. 4,992€</span>
+  </div>
+  <h1 class="hero-title">MEDIAN TECHNOLOGIES</h1>
+  <p class="hero-sub">Analyse Fondamentale &amp; Technique + Perspectives CT / MT / LT &nbsp;·&nbsp; 16 mars 2026</p>
+  <p class="hero-tagline">IA médicale pour le diagnostic précoce des cancers · eyonis® LCS · iCRO</p>
+  <div class="hero-meta">
+    <div class="meta-item"><span class="meta-label">Cours · PRT 16/03 9h45</span><span class="meta-value cours">4,650 €</span></div>
+    <div class="meta-item"><span class="meta-label">Capitalisation</span><span class="meta-value">~175 M€</span></div>
+    <div class="meta-item"><span class="meta-label">52S : bas / haut</span><span class="meta-value">1,192€ / 7,270€</span></div>
+    <div class="meta-item"><span class="meta-label">Nb actions</span><span class="meta-value">37,67M</span></div>
+    <div class="meta-item"><span class="meta-label">Résultats FY2025</span><span class="meta-value" style="color:var(--blue);">23 avril 2026</span></div>
+    <div class="meta-item"><span class="meta-label">Secteur</span><span class="meta-value">MedTech · IA · Oncologie</span></div>
+    <div class="meta-item"><span class="meta-label">ISIN</span><span class="meta-value">FR0011049824</span></div>
+  </div>
+  <div class="disclaimer">⚠️ <strong>NPC — Pas un Conseil en Placement.</strong> Analyse à titre informatif. Median Technologies est une small cap spéculative à haute volatilité. Tout investissement implique un risque de perte en capital. Faites vos propres recherches.</div>
+</div>
+</div>
+
+<!-- ALERTES -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(52,211,153,0.1);">🚨</div>
+    <div><div class="section-title">Points clés du moment</div><div class="section-sub">Alertes prioritaires · 16/03/2026</div></div>
+  </div>
+  <div class="alerts">
+
+    <div class="alert alert-green">
+      <span class="alert-icon">🟢</span>
+      <div class="alert-body">
+        <div class="alert-title">✅ FDA 510(k) OBTENU le 09/02/2026 · eyonis® LCS — Jalon majeur historique</div>
+        <p class="alert-text"><b>Événement fondateur :</b> Median Technologies a obtenu l'autorisation 510(k) de la FDA pour eyonis® LCS — <b>premier logiciel dispositif médical IA de détection et diagnostic dédié au dépistage du cancer du poumon</b>. Le titre a bondi de <b>+44,16% à 6,17€</b> en séance le 9 février. Stifel confirme son objectif d'achat à 6€ et chiffre le marché adressable à <b>10 milliards de dollars US</b> (14,5 millions de patients éligibles). Code de remboursement NT-APC 1508 déjà en place → adoption accélérée. <em class="source">Median CP 09/02/2026 · Stifel · Option Finance 09/02/2026</em></p>
+      </div>
+    </div>
+
+    <div class="alert alert-yellow">
+      <span class="alert-icon">🟡</span>
+      <div class="alert-body">
+        <div class="alert-title">⚠️ PARADOXE : cours retombé à 4,65€ — "Comme si la FDA et Tempus n'avaient pas existé" (forumeur)</div>
+        <p class="alert-text">Malgré l'obtention de la FDA le 09/02, le cours est retombé de 6,17€ à 4,65€ (-25%) en moins d'un mois. Le cours se situe <b>sous son niveau de clôture du 31 décembre 2025</b>. La résistance des <b>4,992€ (23,6% Fibonacci log)</b> n'a pas encore été franchie durablement. Les catalyseurs positifs (FDA + Tempus + démarrage commercial US) sont ignorés par le marché à court terme. <em class="source">Boursorama forum · PRT 16/03/2026</em></p>
+      </div>
+    </div>
+
+    <div class="alert alert-green">
+      <span class="alert-icon">🟢</span>
+      <div class="alert-body">
+        <div class="alert-title">✅ Partenariat TEMPUS signé · Déploiement commercial US lancé · Oran Muduroglu nommé Président Median eyonis Inc.</div>
+        <p class="alert-text">Median Technologies a annoncé un <b>partenariat avec Tempus</b>, acteur majeur de la santé aux États-Unis, pour développer l'accès à eyonis® LCS sur le marché américain. Le déploiement commercial aux États-Unis <b>a officiellement démarré</b> après l'autorisation FDA. Oran Muduroglu nommé Président de Median eyonis Inc. (entité US). Stifel projette <b>41 000 dépistages en 2026 (≈10 M€ CA)</b> avec montée en puissance à 250 000 en 2030 (63,7 M€ CA). <em class="source">Median CP · Boursorama · EasyBourse 09/02/2026</em></p>
+      </div>
+    </div>
+
+    <div class="alert alert-blue">
+      <span class="alert-icon">🔵</span>
+      <div class="alert-body">
+        <div class="alert-title">🎯 Marquage CE eyonis® LCS attendu au T2 2026 · Prochain catalyseur majeur</div>
+        <p class="alert-text">Dossier déposé en <b>juin 2025</b>. Le marquage CE est attendu au <b>T2 2026</b> — soit dans les 3 prochains mois. En cas d'obtention, Median accèderait aux marchés européens où <b>des centaines de milliers de patients sont éligibles</b>. Ce serait le deuxième catalyseur réglementaire majeur de l'année, après la FDA. Au-delà de LCS : preuves de concept en cours sur le carcinome hépatocellulaire (CHC), puis pancréas, côlon. <em class="source">Median CP 19/01/2026 · CP 09/02/2026 · Stifel</em></p>
+      </div>
+    </div>
+
+    <div class="alert alert-red">
+      <span class="alert-icon">🔴</span>
+      <div class="alert-body">
+        <div class="alert-title">⚠️ TRÉSORERIE 18,2 M€ (31/12/2025) · Horizon financement Q4 2026 minimum · BEI 37,5 M€ à tirer</div>
+        <p class="alert-text">La trésorerie est passée de 25,3 M€ (sept. 2025) à <b>18,2 M€ (déc. 2025)</b> — soit un cash burn de ~7 M€ sur le T4 seul. Horizon financement annoncé : <b>"Q4 2026 minimum"</b> (basé sur les données de sept. 2025 avec 25,3 M€). Avec 18,2 M€, l'horizon effectif est plus contraint. <b>Ressource clé :</b> la nouvelle ligne BEI de 37,5 M€ (3 tranches : 19 M€ + 8,5 M€ + 10 M€) signée le 11/07/2025 — <b>toutes les tranches ne sont pas encore tirées</b>, ce qui constitue un coussin de sécurité important. <em class="source">Median CP 19/01/2026 · CP 23/10/2025</em></p>
+      </div>
+    </div>
+
+    <div class="alert alert-violet">
+      <span class="alert-icon">🟣</span>
+      <div class="alert-body">
+        <div class="alert-title">📋 ECR Vienne (4-6 mars 2026) · TD Cowen Healthcare Conference · Webconférences IR</div>
+        <p class="alert-text">Median Technologies a présenté eyonis® LCS au <b>Congrès Européen de Radiologie (ECR 2026)</b> à Vienne (4-6 mars). Participation à la conférence <b>TD Cowen Healthcare</b>. Organisation de <b>deux webconférences</b> pour les investisseurs sur les avancées commerciales d'eyonis® LCS aux US. Ces événements visent à renforcer la visibilité auprès des institutionnels américains — un manque de couverture US constitue un handicap pour la valorisation. <em class="source">Median CP mars 2026 · Boursorama</em></p>
+      </div>
+    </div>
+
+  </div>
+</section>
+</div>
+
+<!-- KPIs -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(56,189,248,0.1);">📊</div>
+    <div><div class="section-title">Métriques clés</div><div class="section-sub">Indicateurs 2025 (non audités) · Résultats complets le 23/04/2026</div></div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">CA 2025</div>
+      <div class="kpi-value">23,5 M€</div>
+      <div class="kpi-delta up">↑ +2,6% vs 22,9 M€ (2024)</div>
+      <div class="kpi-sub">Impact forex négatif de -0,8 M€ · iCRO moteur principal</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Carnet de commandes</div>
+      <div class="kpi-value">76,6 M€</div>
+      <div class="kpi-delta up">↑ +7,9% vs 71 M€ (2024)</div>
+      <div class="kpi-sub">Record historique · 83,1 M€ à taux constants · T4 exceptionnel</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Trésorerie 31/12/2025</div>
+      <div class="kpi-value">18,2 M€</div>
+      <div class="kpi-delta down">↓ vs 25,3 M€ (sept. 2025)</div>
+      <div class="kpi-sub">⚠ Horizon Q4 2026 min · BEI 37,5 M€ partiellement disponible</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Capitalisation</div>
+      <div class="kpi-value">~175 M€</div>
+      <div class="kpi-delta info">37,67M actions × 4,65€</div>
+      <div class="kpi-sub">Source : Investing.com 13/03/2026 · 175,58 M€</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Consensus analyste (4)</div>
+      <div class="kpi-value">12,75 €</div>
+      <div class="kpi-delta up">↑ Achat Fort unanime · +172%</div>
+      <div class="kpi-sub">Haut : 17€ · Bas : 9€ · Source : Investing.com 13/03/2026</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">eyonis® LCS · Proj. Stifel 2026</div>
+      <div class="kpi-value">~10 M€</div>
+      <div class="kpi-delta up">41 000 dépistages projetés</div>
+      <div class="kpi-sub">Objectif 2030 : 250 000 dépist. → 63,7 M€ CA · Marché US 10 Mds$</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">52S bas / haut</div>
+      <div class="kpi-value">1,192 / 7,270</div>
+      <div class="kpi-delta up">+290% depuis le plancher</div>
+      <div class="kpi-sub">Pic post-FDA : 6,17€ (09/02/2026) · Cours actuel : 4,65€</div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">Prochaine publication</div>
+      <div class="kpi-value">23/04/2026</div>
+      <div class="kpi-delta info">Résultats annuels FY2025 audités</div>
+      <div class="kpi-sub">Après clôture des marchés · Résultats complets auditeurs</div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- PRÉSENTATION -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(45,212,191,0.1);">🏢</div>
+    <div><div class="section-title">Présentation société</div><div class="section-sub">Median Technologies · Sophia Antipolis · Fondée 1987</div></div>
+  </div>
+  <div class="company-grid">
+    <div class="company-desc">
+      <p>Median Technologies est une <b>pionnière française de l'IA médicale appliquée à l'oncologie</b>. La société opère sur deux axes complémentaires : <b>iCRO</b> (services d'imagerie pour les essais cliniques pharma/biotech — le moteur cash actuel) et <b>eyonis®</b> (suite de logiciels dispositifs médicaux basés sur l'IA pour le diagnostic précoce des cancers — le moteur de valeur future).</p>
+      <p>Le programme phare <b>eyonis® LCS</b> (Lung Cancer Screening) vient d'obtenir l'autorisation FDA 510(k) le 9 février 2026 — premier logiciel de ce type au monde pour le dépistage du cancer du poumon. La performance clinique est remarquable : <b>sensibilité 93,3%, spécificité 92,4%, valeur prédictive négative 99,9%</b> (1 faux positif pour 1000).</p>
+      <p>Le marché adressable immédiat aux États-Unis est immense : <b>14,5 millions de personnes éligibles</b> au dépistage du cancer du poumon. Le code de remboursement NT-APC 1508 est déjà en place, accélérant l'adoption. La société cible une commercialisation via ventes directes + accords de distribution (premier accord signé en décembre 2025, partenariat Tempus annoncé en 2026).</p>
+      <p><b>Concurrents IA oncologie :</b> iCAD (USA, coté), Lunit (Corée), Veracyte, Volpara Health. Median est première à avoir la FDA sur cette indication spécifique LCS — avantage pionnier documenté.</p>
+    </div>
+    <div>
+      <div class="fact-item"><span class="fact-label">Siège</span><span class="fact-value">Sophia Antipolis, France</span></div>
+      <div class="fact-item"><span class="fact-label">CEO</span><span class="fact-value">Fredrik Brag (fondateur)</span></div>
+      <div class="fact-item"><span class="fact-label">COO eyonis®</span><span class="fact-value">Thomas Bonnefont</span></div>
+      <div class="fact-item"><span class="fact-label">Présid. Median eyonis Inc.</span><span class="fact-value">Oran Muduroglu (US)</span></div>
+      <div class="fact-item"><span class="fact-label">Effectif</span><span class="fact-value">211 personnes</span></div>
+      <div class="fact-item"><span class="fact-label">Présence</span><span class="fact-value">France · USA · Chine</span></div>
+      <div class="fact-item"><span class="fact-label">Financement BEI</span><span class="fact-value">37,5 M€ (3 tranches)</span></div>
+      <div class="fact-item"><span class="fact-label">FDA 510(k) eyonis® LCS</span><span class="fact-value" style="color:var(--green);">✅ Obtenu 09/02/2026</span></div>
+      <div class="fact-item"><span class="fact-label">CE eyonis® LCS</span><span class="fact-value" style="color:var(--yellow);">⏳ T2 2026 attendu</span></div>
+      <div class="fact-item"><span class="fact-label">Résultats FY2025</span><span class="fact-value" style="color:var(--blue);">23/04/2026</span></div>
+    </div>
+  </div>
+
+  <h3 style="color:var(--blue);font-size:16px;margin:28px 0 14px;font-weight:700;">Pipeline eyonis® complet</h3>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Programme</th><th>Indication</th><th>Statut réglementaire</th><th>Marché</th><th>Prochain jalon</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-name">eyonis® LCS</td>
+          <td>Dépistage cancer poumon (Lung Cancer Screening)</td>
+          <td><span class="tag tag-green">✅ FDA 510(k) 09/02/2026</span></td>
+          <td class="td-green">US : 14,5M patients · 10 Mds$ TAM</td>
+          <td>CE T2 2026 · Déploiement commercial US en cours</td>
+        </tr>
+        <tr>
+          <td class="td-name">eyonis® IPN</td>
+          <td>Nodule pulmonaire fortuit (Incidental Pulmonary Nodule)</td>
+          <td><span class="tag tag-yellow">En développement</span></td>
+          <td class="td-blue">Extension naturelle de LCS</td>
+          <td>Dossier à venir après LCS</td>
+        </tr>
+        <tr>
+          <td class="td-name">eyonis® HCC</td>
+          <td>Carcinome hépatocellulaire (cancer du foie)</td>
+          <td><span class="tag tag-yellow">Preuves de concept (PoC)</span></td>
+          <td class="td-violet">2ème marché prioritaire</td>
+          <td>Études pivots à venir</td>
+        </tr>
+        <tr>
+          <td class="td-name">eyonis® Pancréas/Côlon</td>
+          <td>Cancer du pancréas et côlon-rectal</td>
+          <td><span class="tag tag-violet">Pipeline LT</span></td>
+          <td class="td-violet">Extension plateforme IA</td>
+          <td>Horizon 2027-2028+</td>
+        </tr>
+        <tr>
+          <td class="td-name">iCRO / Imaging Lab</td>
+          <td>Services d'imagerie pour essais cliniques oncologie</td>
+          <td><span class="tag tag-green">Commercialisé · CA récurrent</span></td>
+          <td class="td-green">Carnet 76,6 M€ · ~23 M€ CA/an</td>
+          <td>Automatisation → amélioration marges</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+</div>
+
+<!-- CHRONOLOGIE -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(52,211,153,0.1);">📅</div>
+    <div><div class="section-title">Chronologie · 18 derniers mois</div><div class="section-sub">Événements clés · Sept 2024 → Mars 2026</div></div>
+  </div>
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-blue"></div>
+      <div class="tl-date">Avril 2025</div>
+      <div class="tl-title">📊 Résultats FY2024 audités · CA 22,9 M€ · Trésorerie 8,1 M€</div>
+      <div class="tl-text">CA 22,9 M€. Trésorerie 8,1 M€ — niveau très bas. Carnet de commandes 71 M€ (+6,1%). Discussions BEI pour refinancement en cours. <em class="source">Median CP 29/04/2025</em></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-green"></div>
+      <div class="tl-date">Mai 2025</div>
+      <div class="tl-title">✅ Dépôt dossier FDA 510(k) eyonis® LCS — Étape réglementaire US</div>
+      <div class="tl-text">Dépôt du dossier d'autorisation 510(k) auprès de la FDA pour eyonis® LCS. Délai standard FDA 510(k) : 3-6 mois. <em class="source">Median CP 19/01/2026</em></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-green"></div>
+      <div class="tl-date">Juin 2025</div>
+      <div class="tl-title">✅ Dépôt dossier CE eyonis® LCS — Étape réglementaire Europe</div>
+      <div class="tl-text">Dépôt du dossier de marquage CE auprès des autorités européennes. Décision attendue T2 2026. <em class="source">Median CP 19/01/2026</em></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-green"></div>
+      <div class="tl-date">11 Juillet 2025</div>
+      <div class="tl-title">✅ Signature ligne BEI 37,5 M€ (3 tranches) — Bouffée d'oxygène financière</div>
+      <div class="tl-text">Nouvelle ligne BEI : Tranche A 19 M€ + Tranche B 8,5 M€ + Tranche C 10 M€. La Tranche A est tirée en partie. Allonge considérablement l'horizon de financement. <em class="source">Median CP 11/07/2025</em></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-blue"></div>
+      <div class="tl-date">1er Août 2025</div>
+      <div class="tl-title">💰 Augmentation de capital 23,9 M€ (dont 21,8 M€ en numéraire) · ABSA</div>
+      <div class="tl-text">AK sous forme d'ABSA (actions avec BSA). 820 900 BSA souscrites exercées au T3 2025. Renforcement du bilan. <em class="source">Median CP 01/08/2025</em></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-blue"></div>
+      <div class="tl-date">23 Octobre 2025</div>
+      <div class="tl-title">📊 Résultats S1 2025 + indicateurs T3 · Trésorerie 25,3 M€ · Horizon Q4 2026 minimum</div>
+      <div class="tl-text">Trésorerie 25,3 M€ à fin sept. Financement assuré jusqu'au Q4 2026 minimum. Études pivot eyonis® LCS réussies. <em class="source">Median CP 23/10/2025</em></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-green"></div>
+      <div class="tl-date">Décembre 2025</div>
+      <div class="tl-title">✅ Premier accord de distribution eyonis® LCS · US + Europe · Acteur santé américain majeur</div>
+      <div class="tl-text">Signature du premier accord commercial non exclusif avec un acteur majeur américain du secteur de la santé (nom non divulgué). Collaboration active pour un impact commercial dès l'obtention des autorisations. <em class="source">Median CP déc. 2025</em></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-blue"></div>
+      <div class="tl-date">19 Janvier 2026</div>
+      <div class="tl-title">📊 Indicateurs 2025 · CA 23,5 M€ · Carnet 76,6 M€ · Trésorerie 18,2 M€</div>
+      <div class="tl-text">Publication des indicateurs 2025 (non audités). Carnet de commandes record. Décision FDA attendue "dans les prochaines semaines". Résultats audités complets le 23/04/2026. <em class="source">Median CP 19/01/2026</em></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-green"></div>
+      <div class="tl-date">9 Février 2026</div>
+      <div class="tl-title">🎯 FDA 510(k) OBTENU · eyonis® LCS · +44,16% en séance à 6,17€ · JALON HISTORIQUE</div>
+      <div class="tl-text">Autorisation FDA 510(k) officielle pour eyonis® LCS. Premier au monde sur cette indication. Sensibilité 93,3% / Spécificité 92,4% / VPN 99,9%. Stifel confirme Achat 6€, marché 10 Mds$. Oran Muduroglu nommé Président Median eyonis Inc. <em class="source">Median CP 09/02/2026 · BusinessWire</em></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-green"></div>
+      <div class="tl-date">Mars 2026</div>
+      <div class="tl-title">✅ Partenariat TEMPUS · Démarrage commercial US · ECR Vienne · TD Cowen · Webconférences IR</div>
+      <div class="tl-text">Partenariat avec Tempus pour l'accès à eyonis® LCS aux US. Démarrage officiel de la commercialisation. Présence au Congrès Européen de Radiologie (ECR). Conférence TD Cowen Healthcare. Deux webconférences investisseurs organisées. <em class="source">Median CP mars 2026 · Boursorama</em></div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-dot tl-dot-yellow"></div>
+      <div class="tl-date">16 Mars 2026</div>
+      <div class="tl-title">⚠️ Cours retombé à 4,65€ · Sous les niveaux pré-FDA · Résistance 4,992€ non franchie</div>
+      <div class="tl-text">Le cours a reperdu toute la hausse post-FDA (-25% depuis le pic de 6,17€). La résistance du 23,6% Fibonacci log à 4,992€ constitue le prochain verrou technique. VAD documentée (Voleon Capital 0,81%). <em class="source">PRT 16/03/2026 · ABCBourse 10/03/2026</em></div>
+    </div>
+
+  </div>
+</section>
+</div>
+
+<!-- ANALYSE TECHNIQUE -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(251,191,36,0.1);">📈</div>
+    <div><div class="section-title">Analyse technique</div><div class="section-sub">Graphique hebdomadaire PRT · 16/03/2026 · Fibonacci LOGARITHMIQUE</div></div>
+  </div>
+
+  <div class="info-box">
+    ℹ️ <strong>Note de tracé (mis à jour 16/03/2026) :</strong> Le graphique PRT fourni présente un Fibonacci tracé dans le sens <strong>haussier</strong> : plancher <strong>1,193€ (0%)</strong> → pic <strong>7,768€ (100%)</strong>. Échelle <strong>logarithmique</strong> confirmée mathématiquement. Les niveaux représentent des <b>supports à la baisse et résistances à la hausse</b>. Cours 4,630€ = 72,4% du move haussier, au-dessus du GR 61,8% (3,797€), prochaine résistance : 76,4% = 4,992€.
+  </div>
+
+  <div class="fib-header" style="margin-top:20px;">
+    <div class="fib-stat">
+      <div class="fib-stat-label">Cours · PRT 16/03/2026</div>
+      <div class="fib-stat-value" style="color:var(--yellow);">4,630 € (-1,07%)</div>
+    </div>
+    <div class="fib-stat">
+      <div class="fib-stat-label">RSI (14) · Hebdo</div>
+      <div class="fib-stat-value" style="color:var(--teal);">56,91 · Neutre haut</div>
+    </div>
+    <div class="fib-stat">
+      <div class="fib-stat-label">MACD Zéro Lag (12 26 9)</div>
+      <div class="fib-stat-value" style="color:var(--green);">+0,365 · Positif</div>
+    </div>
+  </div>
+
+  <h3 style="color:var(--text-dim);font-size:13px;text-transform:uppercase;letter-spacing:0.08em;margin:20px 0 12px;font-family:'JetBrains Mono',monospace;">
+    FIBONACCI LOG · PRT CORRIGÉ : Plancher 1,193€ (0%) → Pic 7,768€ (100%) · Move HAUSSIER · Màj 16/03/2026
+  </h3>
+
+  <div class="warn-box">
+    <strong>✅ Vérification mathématique complète — Move HAUSSIER · Échelle LOGARITHMIQUE :</strong><br>
+    log(1,193) = 0,0766 · log(7,768) = 0,8904 · Range log = <strong>0,8138</strong><br>
+    23,6% = 10^(0,0766 + 0,236×0,8138) = 10^(0,2687) = <strong>1,856€ ✓ (PRT exact)</strong><br>
+    38,2% = 10^(0,0766 + 0,382×0,8138) = 10^(0,3875) = <strong>2,440€ ✓ (PRT exact)</strong><br>
+    50,0% = 10^(0,0766 + 0,500×0,8138) = 10^(0,4835) = <strong>3,044€ ✓ (PRT exact)</strong><br>
+    61,8% GR = 10^(0,0766 + 0,618×0,8138) = 10^(0,5795) = <strong>3,797€ ✓ (PRT exact)</strong><br>
+    76,4% = 10^(0,0766 + 0,764×0,8138) = 10^(0,6983) = <strong>4,992€ (calculé · résistance clé)</strong><br>
+    → Cours 4,630€ : (log(4,630)−log(1,193)) / 0,8138 = (0,6656−0,0766)/0,8138 = <strong>72,4% du move haussier — entre GR 61,8% (3,797€) et 76,4% (4,992€)</strong>
+  </div>
+
+  <div style="margin-top:16px;">
+    <div class="fib-row">
+      <div class="fib-label" style="color:var(--red);">0% · Plancher</div>
+      <div class="fib-bar-bg"><div class="fib-bar-fill" style="width:3%;background:var(--red);"></div></div>
+      <div class="fib-price" style="color:var(--red);">1,193 €</div>
+    </div>
+    <div class="fib-row">
+      <div class="fib-label" style="color:var(--orange);">23,6%</div>
+      <div class="fib-bar-bg"><div class="fib-bar-fill" style="width:23.6%;background:var(--orange);"></div></div>
+      <div class="fib-price" style="color:var(--orange);">1,856 € ✓</div>
+    </div>
+    <div class="fib-row">
+      <div class="fib-label" style="color:var(--yellow);">38,2%</div>
+      <div class="fib-bar-bg"><div class="fib-bar-fill" style="width:38.2%;background:var(--yellow);"></div></div>
+      <div class="fib-price" style="color:var(--yellow);">2,440 € ✓</div>
+    </div>
+    <div class="fib-row">
+      <div class="fib-label" style="color:var(--teal);">50% · Pivot</div>
+      <div class="fib-bar-bg"><div class="fib-bar-fill" style="width:50%;background:var(--teal);"></div></div>
+      <div class="fib-price" style="color:var(--teal);">3,044 € ✓</div>
+    </div>
+    <div class="fib-row">
+      <div class="fib-label" style="color:var(--green);font-weight:700;">61,8% ★ GR</div>
+      <div class="fib-bar-bg"><div class="fib-bar-fill" style="width:61.8%;background:rgba(52,211,153,0.4);"></div></div>
+      <div class="fib-price" style="color:var(--green);font-weight:700;">3,797 € ✓</div>
+    </div>
+    <!-- Cours 4,630€ = 72,4% — entre GR 61,8% et 76,4% (4,992€) -->
+    <div class="fib-row">
+      <div class="fib-label" style="color:var(--yellow);font-weight:700;">← COURS</div>
+      <div class="fib-bar-bg">
+        <div class="fib-bar-fill" style="width:72.4%;background:rgba(251,191,36,0.55);"></div>
+        <div class="fib-cursor" style="left:calc(72.4% - 1.5px);"></div>
+      </div>
+      <div class="fib-price" style="color:var(--yellow);font-weight:700;">4,630€ · ~72,4%</div>
+    </div>
+    <div class="fib-row">
+      <div class="fib-label" style="color:var(--orange);font-weight:700;">76,4% ▲ Résist.</div>
+      <div class="fib-bar-bg"><div class="fib-bar-fill" style="width:76.4%;background:var(--orange);"></div></div>
+      <div class="fib-price" style="color:var(--orange);font-weight:700;">4,992 € (calculé)</div>
+    </div>
+    <div class="fib-row">
+      <div class="fib-label" style="color:var(--violet);">100% · Pic</div>
+      <div class="fib-bar-bg"><div class="fib-bar-fill" style="width:100%;background:var(--violet);opacity:0.3;"></div></div>
+      <div class="fib-price" style="color:var(--violet);">7,768 €</div>
+    </div>
+  </div>
+
+  <div class="fib-note">
+    <strong>🔍 Positionnement exact au 16/03/2026 — Mise à jour (sens haussier) · Situation bien plus avancée qu'estimé</strong>
+    <br><br>
+    <b>Correction importante :</b> Le Fibonacci est tracé dans le sens <strong>haussier</strong> (plancher 1,193€ → pic 7,768€). Le cours (4,630€) se situe à <strong>72,4% du move haussier log</strong> — soit <b>entre le Golden Ratio 61,8% (3,797€) et la résistance 76,4% (4,992€)</b>. Le cours est donc déjà <em>au-dessus du GR</em>, bien avancé dans le move de retracement.
+    <br><br>
+    <strong>Le 76,4% (4,992€) est la prochaine résistance Fibonacci clé.</strong> Le cours en est à <b>+7,7%</b>. Le franchissement et la consolidation au-dessus de cette zone ouvrirait la voie vers le 100% (7,768€). SMAs visibles PRT à droite : 5,625€ / 5,286€ / 4,948€ — le cours (4,630€) est sous ces trois moyennes → tendance baissière CT sur les MAs, malgré la position avancée sur le Fibonacci.
+    <br><br>
+    <strong>Comparaison avec l'analyse initiale (incorrecte) :</strong> J'avais interprété le Fibonacci en sens baissier (7,768€=0% → 1,193€=100%), ce qui plaçait le cours à 27,4% "sous la résistance 23,6% à 4,992€". La réalité est plus favorable : le cours est à <b>72,4% du move haussier</b>, au-dessus du GR 61,8% (3,797€), avec la résistance 76,4% (4,992€) comme prochain objectif.
+    <br><br>
+    <strong>RSI 56,91 :</strong> Neutre haut (50-70) — favorable, pas en surchauffe. <strong>MACD +0,365 :</strong> positif, haussier. <strong>Ichimoku (PRT) :</strong> cours en approche du bord supérieur du nuage — franchissement = signal haussier MT. <strong>Résistance horizontale rouge PRT :</strong> ~4,88-5,00€ = double résistance (horizontale + 76,4% Fibonacci) = zone de décision majeure.
+    <br><br>
+    <strong>VAD documentée :</strong> Voleon Capital 0,81% au 10/03/2026. Pression vendeuse CT documentée.
+  </div>
+
+  <div style="margin-top:20px;">
+    <div class="alert alert-green">
+      <span class="alert-icon">🎯</span>
+      <div class="alert-body">
+        <div class="alert-title">Position haussière avancée : cours au-dessus du GR · Résistance 76,4% (4,992€) = prochain verrou</div>
+        <p class="alert-text">Le cours est à <b>72,4% du move haussier log</b> — au-dessus du Golden Ratio (3,797€). La prochaine résistance est le <b>76,4% = 4,992€ (~5€)</b>, à +7,7% du cours actuel. RSI neutre, MACD positif — pas d'obstacle technique. <b>Un franchissement hebdomadaire au-dessus de 5,00€</b> ouvrirait la voie vers la zone 5,60-6,00€ (SMAs) puis vers le 100% Fibonacci à 7,768€. Le catalyseur CE T2 2026 serait le déclencheur naturel de ce franchissement.</p>
+      </div>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- CONSENSUS ANALYSTES -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(192,132,252,0.1);">🏦</div>
+    <div><div class="section-title">Consensus analystes</div><div class="section-sub">4 analystes · Achat Fort unanime · Objectif moyen 12,75€ (+172%)</div></div>
+  </div>
+
+  <div class="warn-box">
+    <strong>⚠ Note :</strong> L'objectif consensus moyen (12,75€) est très éloigné du cours actuel (4,65€). Ces objectifs ont été construits sur la thèse de la commercialisation d'eyonis® LCS — qui est désormais en cours aux US. Ils intègrent un ramp-up commercial sur plusieurs années. <b>Seul Stifel est identifié nommément</b> avec une note récente post-FDA (6€, 09/02/2026). Les 3 autres analystes ne sont pas identifiés publiquement dans les sources disponibles. <em class="source">Investing.com 13/03/2026</em>
+  </div>
+
+  <div class="table-wrap" style="margin-top:16px;">
+    <table>
+      <thead>
+        <tr><th>Analyste</th><th>Recommandation</th><th>Objectif cours</th><th>Potentiel*</th><th>Date note</th><th>Statut</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-name">Stifel Nicolaus</td>
+          <td><span class="rec-buy">Achat Fort</span></td>
+          <td class="td-green">6,00 €</td>
+          <td class="td-green">+29%</td>
+          <td class="td-mono"><b>09/02/2026</b></td>
+          <td><span class="tag tag-green">✓ Post-FDA · Très récent</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">Analyste #2</td>
+          <td><span class="rec-buy">Achat Fort</span></td>
+          <td class="td-green">~17 € (est. haut)</td>
+          <td class="td-green">+266%</td>
+          <td class="td-mono">Non identifié</td>
+          <td><span class="tag tag-yellow">⚠ Identité inconnue</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">Analyste #3</td>
+          <td><span class="rec-buy">Achat Fort</span></td>
+          <td class="td-green">~12 € (est. milieu)</td>
+          <td class="td-green">+158%</td>
+          <td class="td-mono">Non identifié</td>
+          <td><span class="tag tag-yellow">⚠ Identité inconnue</span></td>
+        </tr>
+        <tr>
+          <td class="td-name">Analyste #4</td>
+          <td><span class="rec-buy">Achat Fort</span></td>
+          <td class="td-green">~9 € (est. bas)</td>
+          <td class="td-green">+94%</td>
+          <td class="td-mono">Non identifié</td>
+          <td><span class="tag tag-yellow">⚠ Identité inconnue</span></td>
+        </tr>
+        <tr>
+          <td colspan="2" style="font-weight:700;color:var(--text);">CONSENSUS MOYEN (Investing.com 13/03)</td>
+          <td class="td-green" style="font-weight:700;">12,75 €</td>
+          <td class="td-green" style="font-weight:700;">+172%</td>
+          <td colspan="2" class="td-mono">Haut 17€ · Bas 9€ · 4 Achat / 0 Vente · Source : Investing.com</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p style="font-size:12px;color:var(--text-muted);margin-top:10px;">* Potentiel calculé vs cours 4,650€ (PRT 16/03/2026). Seul Stifel (6€, 09/02/2026) est confirmé nommément et daté. Les objectifs haut/bas proviennent d'Investing.com sans identification des établissements.</p>
+</section>
+</div>
+
+<!-- RISQUES -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(248,113,113,0.1);">⚠️</div>
+    <div><div class="section-title">Risques documentés</div><div class="section-sub">Ne jamais minimiser un risque identifié</div></div>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr><th>Risque</th><th>Niveau</th><th>Détail documenté</th><th>Source</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="td-name">Trésorerie tendue · Horizon Q4 2026</td>
+          <td><span class="tag tag-red">ÉLEVÉ</span></td>
+          <td>18,2 M€ fin 2025. Cash burn ~7 M€/trimestre (tendance T4 2025). Horizon "Q4 2026 minimum" calculé sur 25,3 M€ (sept. 2025) — avec 18,2 M€, l'horizon est potentiellement raccourci à ~2,5 trimestres sans tirer les tranches BEI restantes. <b>La Tranche B (8,5 M€) et C (10 M€) BEI constituent le filet de sécurité primaire.</b></td>
+          <td class="td-mono">CP 19/01/2026 · CP 23/10/2025</td>
+        </tr>
+        <tr>
+          <td class="td-name">Ramp-up commercial US incertain</td>
+          <td><span class="tag tag-yellow">MOYEN-ÉLEVÉ</span></td>
+          <td>La FDA est obtenue mais le déploiement commercial prend du temps. Stifel projette 41 000 dépistages en 2026 — projection optimiste que le marché n'achète pas encore. Le chiffre d'affaires eyonis® 2026 sera quasi-nul (<5 M€) — la thèse se joue sur 2027-2030. Risque de déception si les premiers contrats tardent.</td>
+          <td class="td-mono">Stifel 09/02/2026 · Median CP</td>
+        </tr>
+        <tr>
+          <td class="td-name">Vente à découvert · Voleon Capital 0,81%</td>
+          <td><span class="tag tag-yellow">MOYEN</span></td>
+          <td>Voleon Capital Management LP a augmenté sa position courte à 0,81% au 10/03/2026 (après 0,76% le 05/03). Pression vendeuse documentée qui contribue au reflux du cours post-FDA.</td>
+          <td class="td-mono">ABCBourse · AMF 10/03/2026</td>
+        </tr>
+        <tr>
+          <td class="td-name">CE européen non encore obtenu</td>
+          <td><span class="tag tag-yellow">MOYEN</span></td>
+          <td>Attendu T2 2026. Dossier soumis en juin 2025. Un retard de certification européenne retarderait l'accès à un marché de "centaines de milliers de patients". Risque réglementaire standard mais non nul.</td>
+          <td class="td-mono">Median CP 19/01/2026</td>
+        </tr>
+        <tr>
+          <td class="td-name">Dilution possible · Financement futur</td>
+          <td><span class="tag tag-yellow">MOYEN</span></td>
+          <td>Avec 18,2 M€ de trésorerie et un cash burn significatif, une nouvelle levée de fonds sera probablement nécessaire avant fin 2027. L'historique récent montre des augmentations de capital régulières (AK août 2025, AK précédentes).</td>
+          <td class="td-mono">Historique IR Median</td>
+        </tr>
+        <tr>
+          <td class="td-name">Concurrence IA médicale oncologie</td>
+          <td><span class="tag tag-teal">FAIBLE-MOYEN</span></td>
+          <td>iCAD (US), Lunit (Corée), Veracyte. Median est <b>premier à avoir la FDA 510(k) sur LCS</b> — avantage pionnier réel. Mais le marché IA médical se développe rapidement et de nouveaux entrants sont possibles.</td>
+          <td class="td-mono">Stifel · Analyses secteur</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+</div>
+
+<!-- PERSPECTIVES -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(192,132,252,0.1);">🔭</div>
+    <div><div class="section-title">Perspectives par horizon</div><div class="section-sub">CT / MT / LT · Catalyseurs &amp; risques</div></div>
+  </div>
+  <div class="perspectives-grid">
+    <div class="persp-card">
+      <div class="persp-header"><span style="font-size:18px;">⚡</span>
+        <div><div class="persp-label">Court Terme</div><span class="persp-horizon ct">T1–T2 2026</span></div>
+      </div>
+      <ul class="persp-list">
+        <li class="pos">Marquage CE eyonis® LCS attendu T2 2026 → 2ème catalyseur réglementaire majeur</li>
+        <li class="pos">Résultats FY2025 audités complets le 23/04/2026</li>
+        <li class="pos">Premiers contrats commerciaux US eyonis® LCS → signal de traction</li>
+        <li class="pos">Franchissement 4,992€ (23,6% Fibonacci) → signal technique haussier</li>
+        <li class="neg">VAD Voleon 0,81% → pression vendeuse documentée</li>
+        <li class="warn">Trésorerie 18,2 M€ → surveillance cash burn impérative</li>
+        <li class="neg">Cours reflué -25% post-FDA sans raison fondamentale claire</li>
+      </ul>
+    </div>
+    <div class="persp-card">
+      <div class="persp-header"><span style="font-size:18px;">📡</span>
+        <div><div class="persp-label">Moyen Terme</div><span class="persp-horizon mt">S2 2026 – 2027</span></div>
+      </div>
+      <ul class="persp-list">
+        <li class="pos">Premiers revenus commerciaux eyonis® LCS US → validation du modèle</li>
+        <li class="pos">eyonis® LCS Europe post-CE → accès à des centaines de milliers de patients</li>
+        <li class="pos">Progression pipeline : eyonis® IPN, HCC → extensions de plateforme</li>
+        <li class="pos">iCRO : carnet 76,6 M€ → accélération CA 2026 + amélioration marges (automatisation)</li>
+        <li class="warn">Burn rate à surveiller → financement complémentaire probable</li>
+        <li class="neg">Ramp-up commercial lent → risque de déception vs projections Stifel</li>
+      </ul>
+    </div>
+    <div class="persp-card">
+      <div class="persp-header"><span style="font-size:18px;">🌟</span>
+        <div><div class="persp-label">Long Terme</div><span class="persp-horizon lt">2027-2030+</span></div>
+      </div>
+      <ul class="persp-list">
+        <li class="pos">250 000 dépistages/an → 63,7 M€ CA eyonis® (projection Stifel 2030)</li>
+        <li class="pos">Plateforme multi-cancers (poumon + foie + pancréas + côlon) → marché addressable colossal</li>
+        <li class="pos">Modèle SaaS médical (abonnements diagnostics) → récurrence et marges élevées</li>
+        <li class="pos">Potentiel de rapprochement/acquisition par un acteur santé majeur US/mondial</li>
+        <li class="neg">Profitabilité encore lointaine (5-8 ans minimum sans accélération majeure)</li>
+        <li class="warn">Valorisation actuelle spéculative — dépend entièrement du succès commercial</li>
+      </ul>
+    </div>
+  </div>
+</section>
+</div>
+
+<!-- MON AVIS -->
+<div class="container">
+<section>
+  <div class="section-header">
+    <div class="section-icon" style="background:rgba(251,191,36,0.1);">💡</div>
+    <div><div class="section-title">Mon avis personnel</div><div class="section-sub">Analyse subjective · NPC · 16/03/2026</div></div>
+  </div>
+
+  <div class="verdict-box bullish">
+    <div class="verdict-title">✅ Dossier fondamental — Pionnier mondial avec FDA en poche, undervalué</div>
+    <p class="verdict-text">
+      Median Technologies présente un profil que peu de small caps peuvent afficher : <b>première autorisation FDA mondiale sur une indication oncologique IA</b>, un marché adressable de 10 milliards de dollars aux États-Unis, un partenariat Tempus, un démarrage commercial actif — le tout pour une capitalisation de seulement <b>175 M€</b>. Le consensus à 12,75€ (+172%) n'est pas délirant si le ramp-up commercial se matérialise.
+      <br><br>
+      La <b>base iCRO génère ~23 M€/an de revenus récurrents</b> avec un carnet de commandes record de 76,6 M€ — ce qui donne à la société une assise opérationnelle solide, bien que la profitabilité reste éloignée. L'investisseur achète essentiellement l'optionalité eyonis® à un prix raisonnable compte tenu du chemin parcouru.
+    </p>
+  </div>
+
+  <div class="verdict-box neutral">
+    <div class="verdict-title">⚠ Nuances honnêtes — Trésorerie tendue · Ramp-up long · Attente de patience</div>
+    <p class="verdict-text">
+      La <b>trésorerie de 18,2 M€</b> est le point de vigilance numéro un. Même avec la ligne BEI disponible, la société devra probablement lever des fonds avant fin 2027 — dilution en perspective. Le fait que le cours soit <b>retombé sous ses niveaux pré-FDA</b> après un événement aussi majeur que le 510(k) est un signal d'avertissement : soit le marché ne croit pas au ramp-up commercial, soit des vendeurs structurels exercent une pression (VAD 0,81% Voleon).
+      <br><br>
+      Le vrai risque est le <b>délai entre la FDA et les premiers revenus significatifs</b> : Stifel projette 10 M€ CA eyonis® 2026 mais ce niveau sera difficile à atteindre la première année commerciale. Si le CA 2026 déçoit vs attentes, nouvelle pression baissière probable.
+    </p>
+  </div>
+
+  <div class="alert alert-blue">
+    <span class="alert-icon">🎯</span>
+    <div class="alert-body">
+      <div class="alert-title">Verdict : SPÉCULATIF POSITIF STRUCTUREL — Achat progressif sous 5€ · Patience impérative</div>
+      <p class="alert-text">
+        Median est une <b>valeur de conviction long terme pour profil spéculatif informé</b>. La FDA obtenue constitue une validation irréversible — on ne "dé-FDA" pas un produit. Le cours à 4,65€ (<b>en dessous du pic post-FDA à 6,17€</b>) offre un point d'entrée potentiellement intéressant avec la résistance 23,6% à 4,99€ comme objectif CT et le pic 7,77€ comme objectif MT.
+        <br><br>
+        <b>Stratégie suggérée profil conviction LT :</b> Construction progressive d'une ligne sous 5€, avec renforcement sur retour vers 3,80€ (38,2%) si test. Stop sous 2,44€ (GR 61,8%). Catalyseurs à surveiller : CE T2 2026, résultats FY2025 (23/04), premiers contrats commerciaux US. Cette valeur exige <b>au minimum 18-24 mois de patience</b> avant de juger le déploiement commercial.
+      </p>
+    </div>
+  </div>
+
+  <div class="key-levels" style="margin-top:24px;">
+    <div class="level-tag current"><span class="level-tag-label">Cours actuel</span><span class="level-tag-value" style="color:var(--yellow);">4,630 €</span></div>
+    <div class="level-tag resist"><span class="level-tag-label">76,4% Fibo log</span><span class="level-tag-value">4,992 €</span></div>
+    <div class="level-tag resist"><span class="level-tag-label">Pic post-FDA</span><span class="level-tag-value">6,170 €</span></div>
+    <div class="level-tag support"><span class="level-tag-label">GR 61,8% · Support</span><span class="level-tag-value">3,797 €</span></div>
+    <div class="level-tag support"><span class="level-tag-label">50% Fibo · Pivot</span><span class="level-tag-value">3,044 €</span></div>
+    <div class="level-tag stop"><span class="level-tag-label">38,2% · Stop zone</span><span class="level-tag-value">2,440 €</span></div>
+    <div class="level-tag stop"><span class="level-tag-label">Plancher absolu</span><span class="level-tag-value">1,193 €</span></div>
+    <div class="level-tag target"><span class="level-tag-label">100% Fibo · Pic</span><span class="level-tag-value">7,768 €</span></div>
+    <div class="level-tag target"><span class="level-tag-label">Stifel · Objectif</span><span class="level-tag-value">6,00 €</span></div>
+    <div class="level-tag target"><span class="level-tag-label">Consensus moyen</span><span class="level-tag-value">12,75 €</span></div>
+  </div>
+</section>
+</div>
+
+<div class="container">
+  <footer>
+    <p><strong>MEDIAN TECHNOLOGIES (ALMDT)</strong> · Analyse Forum · Euronext Growth Paris · FR0011049824</p>
+    <p>Rédigé le <strong>16 mars 2026</strong> · Sources : Median Technologies IR (communiqués officiels BusinessWire), Option Finance 09/02/2026, EasyBourse 09/02/2026, Investing.com 13/03/2026, Boursorama, ABCBourse 10/03/2026, Stifel · Graphiques ProRealTime hebdomadaire fourni</p>
+    <p style="margin-top:8px;color:#3a4460;">⚠ <strong>NPC — Pas un Conseil en Placement.</strong> L'auteur peut détenir ou ne pas détenir des positions. Tout investissement implique un risque de perte. Corrigez-moi si erreur factuelle avec source.</p>
+    <p style="margin-top:6px;color:#2a3356;font-size:11px;">Méthodologie issue du prompt d'analyse élaboré sur VusionGroup, 2CRSI, Median Technologies, DBV Technologies, Amoeba, Nvidia, Kalray, Rocket Lab, Sensorion, Egide, THX Pharma, Abionyx, Crossject · Mars 2026</p>
+  </footer>
+</div>
+
+</body>
+</html>
